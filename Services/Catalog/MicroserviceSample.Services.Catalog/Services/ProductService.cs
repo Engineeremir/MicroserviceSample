@@ -33,50 +33,50 @@ namespace MicroserviceSample.Services.Catalog.Services
 
         public async Task<Response<List<ProductDto>>> GetAllAsync()
         {
-            var Products = await _productCollection.Find(Product => true).ToListAsync();
+            var products = await _productCollection.Find(Product => true).ToListAsync();
 
-            if (Products.Any())
+            if (products.Any())
             {
-                foreach (var Product in Products)
+                foreach (var Product in products)
                 {
                     Product.Category = await _categoryCollection.Find<Category>(x => x.Id == Product.CategoryId).FirstAsync();
                 }
             }
             else
             {
-                Products = new List<Product>();
+                products = new List<Product>();
             }
 
-            return Response<List<ProductDto>>.Success(_mapper.Map<List<ProductDto>>(Products), 200);
+            return Response<List<ProductDto>>.Success(_mapper.Map<List<ProductDto>>(products), 200);
         }
 
         public async Task<Response<ProductDto>> GetByIdAsync(string id)
         {
-            var Product = await _productCollection.Find<Product>(x => x.Id == id).FirstOrDefaultAsync();
+            var products = await _productCollection.Find<Product>(x => x.Id == id).FirstOrDefaultAsync();
 
-            if (Product == null)
+            if (products == null)
             {
                 return Response<ProductDto>.Fail("Product not found", 404);
             }
-            Product.Category = await _categoryCollection.Find<Category>(x => x.Id == Product.CategoryId).FirstAsync();
+            products.Category = await _categoryCollection.Find<Category>(x => x.Id == products.CategoryId).FirstAsync();
 
-            return Response<ProductDto>.Success(_mapper.Map<ProductDto>(Product), 200);
+            return Response<ProductDto>.Success(_mapper.Map<ProductDto>(products), 200);
         }
 
         public async Task<Response<List<ProductDto>>> GetAllByUserIdAsync(string userId)
         {
-            var Products = await _productCollection.Find<Product>(x => x.UserId == userId).ToListAsync();
+            var products = await _productCollection.Find<Product>(x => x.UserId == userId).ToListAsync();
 
-            if (Products.Any())
+            if (products.Any())
             {
-                foreach (var Product in Products)
+                foreach (var product in products)
                 {
-                    Product.Category = await _categoryCollection.Find<Category>(x => x.Id == Product.CategoryId).FirstAsync();
+                    product.Category = await _categoryCollection.Find<Category>(x => x.Id == product.CategoryId).FirstAsync();
                 }
             }
             else
             {
-                Products = new List<Product>();
+                products = new List<Product>();
             }
 
             return Response<List<ProductDto>>.Success(_mapper.Map<List<ProductDto>>(Products), 200);
